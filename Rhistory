@@ -1,0 +1,230 @@
+4*19
+a=4
+a="four"
+a=c(2,3,4,2,1)
+a
+b=a*2
+rm(list=ls())
+getwd()
+setwd("c:\Users\")
+source("search_functions.R")
+# Configuration of the problem
+ndisks = 3
+nrods  = 3
+initialrod = 1
+finalrod   = 3
+# Definition of initial and final state
+initialstate = c(1,1,1)
+finalstate   = c(3,3,3)
+# Definition of all possible actions
+possibleactions = data.frame(orig=1,dest=2)
+possibleactions = rbind(possibleactions,c(1,3))
+possibleactions = rbind(possibleactions,c(2,3))
+possibleactions = rbind(possibleactions,c(2,1))
+possibleactions = rbind(possibleactions,c(3,1))
+possibleactions = rbind(possibleactions,c(3,2))
+# Creation of the frontier with only the initial node
+node = list()
+node$state = initialstate
+node$actions = c(0,0)
+node$deep = 0
+frontier = list(node)
+# Count is  used to avoid to fill memory (for bigger problems must be changed)
+count = 1
+countlimit = 100
+# While final state not found
+while (!isFinalState(node$state,finalstate) & count<countlimit){
+# Break if frontier is empty
+if (length(frontier)==0){
+break
+}
+# Extract first node of the frontier
+firstnode = frontier[[1]]
+frontier[[1]] = NULL
+# If final state found, break and return results
+if (isFinalState(firstnode$state)){
+print("Final State Found")
+break
+}
+# For each one of the possible actions
+for (i in 1:nrow(possibleactions)){
+action = as.numeric(possibleactions[1,])
+state  = firstnode$state
+# If possible, it is applied and new node stored in frontier
+if (isApplicable(firstnode$state,action)){
+newnode = list()
+newstate = state
+newnode$state = effect(state,action)
+newnode$actions = rbind(firstnode$actions,action)
+newnode$deep = firstnode$deep+1
+frontier = append(frontier,list(newnode))
+}
+}
+count = count+1
+}
+# Show the obtained (or not) final solution
+if (count == countlimit){
+print("Maximum Number of iterations reached. No solution found")
+} else{
+print("Solution found!!")
+print(firstnode$actions)
+}
+setwd("c:\Users\")
+source("search_functions.R")
+# Configuration of the problem
+ndisks = 3
+nrods  = 3
+initialrod = 1
+finalrod   = 3
+# Definition of initial and final state
+initialstate = c(1,1,1)
+finalstate   = c(3,3,3)
+# Definition of all possible actions
+possibleactions = data.frame(orig=1,dest=2)
+possibleactions = rbind(possibleactions,c(1,3))
+possibleactions = rbind(possibleactions,c(2,3))
+possibleactions = rbind(possibleactions,c(2,1))
+possibleactions = rbind(possibleactions,c(3,1))
+possibleactions = rbind(possibleactions,c(3,2))
+# Creation of the frontier with only the initial node
+node = list()
+node$state = initialstate
+node$actions = c(0,0)
+node$deep = 0
+frontier = list(node)
+# Count is  used to avoid to fill memory (for bigger problems must be changed)
+count = 1
+countlimit = 100
+# While final state not found
+while (!isFinalState(node$state,finalstate) & count<countlimit){
+# Break if frontier is empty
+if (length(frontier)==0){
+break
+}
+# Extract first node of the frontier
+firstnode = frontier[[1]]
+frontier[[1]] = NULL
+# If final state found, break and return results
+if (isFinalState(firstnode$state)){
+print("Final State Found")
+break
+}
+# For each one of the possible actions
+for (i in 1:nrow(possibleactions)){
+action = as.numeric(possibleactions[1,])
+state  = firstnode$state
+# If possible, it is applied and new node stored in frontier
+if (isApplicable(firstnode$state,action)){
+newnode = list()
+newstate = state
+newnode$state = effect(state,action)
+newnode$actions = rbind(firstnode$actions,action)
+newnode$deep = firstnode$deep+1
+frontier = append(frontier,list(newnode))
+}
+}
+count = count+1
+}
+# Show the obtained (or not) final solution
+if (count == countlimit){
+print("Maximum Number of iterations reached. No solution found")
+} else{
+print("Solution found!!")
+print(firstnode$actions)
+}
+setwd("c:/Users/")
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd("C:/Users/Administrador.WIN-FC1VBLJ76B5/Google Drive/2016 06 Sistemas Inteligentes 2016-17/Materiales/SI_ALUD/Code Templates")
+rm(list=ls())
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+source("search_functions.R")
+ndisks = 3
+nrods  = 3
+initialrod = 1
+finalrod   = 3
+initialstate = c(1,1,1)
+finalstate   = c(3,3,3)
+possibleactions = data.frame(orig=1,dest=2)
+View(possibleactions)
+possibleactions = data.frame(orig=1,dest=2)
+possibleactions = rbind(possibleactions,c(1,3))
+possibleactions = rbind(possibleactions,c(2,3))
+possibleactions = rbind(possibleactions,c(2,1))
+possibleactions = rbind(possibleactions,c(3,1))
+possibleactions = rbind(possibleactions,c(3,2))
+View(possibleactions)
+if (count == countlimit | length(frontier)==0){
+print("Maximum Number of iterations reached. No solution found")
+} else{
+print("Solution found!!")
+print(firstnode$actions)
+}
+possibleactions
+rm(possibleactions)
+# This is used to configure the enviroment
+# *second instruction can provide error if path contains accents or special characters
+rm(list=ls())
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+#setwd("c:/Users/........")
+source("search_functions.R")
+# Configuration of the problem
+ndisks = 10
+nrods  = 5
+initialrod = 1
+finalrod   = 3
+# Definition of initial and final state
+initialstate = c(1,1,1)
+finalstate   = c(3,3,3)
+# Definition of all possible actions
+possibleactions = data.frame(orig=1,dest=2)
+possibleactions = rbind(possibleactions,c(1,3))
+possibleactions = rbind(possibleactions,c(2,3))
+possibleactions = rbind(possibleactions,c(2,1))
+possibleactions = rbind(possibleactions,c(3,1))
+possibleactions = rbind(possibleactions,c(3,2))
+# Creation of the frontier with only the initial node
+node = list()
+node$state = initialstate
+node$actions = c(0,0)
+node$deep = 0
+frontier = list(node)
+# Count is  used to avoid to fill memory (for bigger problems must be changed)
+count = 1
+countlimit = 100
+# While final state not found
+while (!isFinalState(node$state,finalstate) & count<countlimit){
+# Break if frontier is empty
+if (length(frontier)==0){
+break
+}
+# Extract first node of the frontier
+firstnode = frontier[[1]]
+frontier[[1]] = NULL
+# If final state found, break and return results
+if (isFinalState(firstnode$state)){
+print("Final State Found")
+break
+}
+# For each one of the possible actions
+for (i in 1:nrow(possibleactions)){
+action = as.numeric(possibleactions[1,])
+state  = firstnode$state
+# If possible, it is applied and new node stored in frontier
+if (isApplicable(firstnode$state,action)){
+newnode = list()
+newstate = state
+newnode$state = effect(state,action)
+newnode$actions = rbind(firstnode$actions,action)
+newnode$deep = firstnode$deep+1
+frontier = append(frontier,list(newnode))
+}
+}
+count = count+1
+}
+# Show the obtained (or not) final solution
+if (count == countlimit | length(frontier)==0){
+print("Maximum Number of iterations reached. No solution found")
+} else{
+print("Solution found!!")
+print(firstnode$actions)
+}
