@@ -4,70 +4,55 @@ rm(list=ls())
 #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 #setwd("/Users/vitiok/University/IS/assignment_1")
 setwd(getwd())
-#clesource("search_functions.R")
 
-print(getwd())
-
+# load library for permutation function
 library(gtools)
 
-# Configuration of the problem
-ndisks = 3 # 10
-nrods  = 3 # 5
-initialrod = 1
-finalrod   = 3
+min_rods  <- 3
+min_disks <- 3
+max_rods  <- 10
+max_disks <- 10
 
+# check if value is in specified range
+between <- function(value, min=0, max=20) {
+  if(value < min || value > max) {
+    return(FALSE)
+  }
+  
+  return(TRUE)
+}
 
-# ==== My code ==== 
-
-
-
-
-read_value <- function(info){ 
-  n <- readline(prompt=info)
+# take input from keyboard
+input_value <- function(text, min=0, max=20){ 
+  n <- readline(prompt=text)
   n <- as.integer(n)
-  if (is.na(n) || n < 3){
-    return(n <- read_value(info))
-  } 
+  if (is.na(n)){
+    return(n <- input_value(text, min, max))
+  }
+  if(!between(n, min, max)) {
+    return(n <- input_value(text, min, max))
+  }
+  
   return(n)
 }
 
+
 # input nr of disks and roads
-# issue => have to validate input so that it receives only integers > 2 
-nrDisks <- read_value("Enter nr of Disks: ")
-nrRods <- read_value("Enter nr of Rods: ")
-
-
-
-
+nrDisks <- input_value("Enter nr of Disks: ", min_disks, max_disks)
+nrRods  <- input_value("Enter nr of Rods: ", min_rods, max_rods)
+initialRod <- input_value("Enter initial rod position: ", 1, nrRods)
+finalRod <- input_value("Enter final rod position: ", 1, nrRods)
 
 # create initial and final state
 initialState <- vector(mode = "integer", length = nrRods)
 finalState   <- vector(mode = "integer", length = nrRods)
-finalState   <- replace(finalState, initialState == 0, nrRods)
-initialState <- replace(initialState, initialState == 0, 1)
+finalState   <- replace(finalState, initialState == 0, finalRod)
+initialState <- replace(initialState, initialState == 0, initialRod)
 
 possibleActions = permutations(nrRods, 2, c(1:nrRods), repeats.allowed=FALSE)
 
-class(possibleActions)
+# print possible actions
 cat(possibleActions)
-
-
-
-# ==== My code ==== 
-
-# Definition of initial and final state
-initialstate = c(1,1,1) # (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-finalstate   = c(3,3,3) # (5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5), where 5 is the nrods
-
-# Definition of all possible actions
-possibleactions = data.frame(orig=1,dest=2)
-possibleactions = rbind(possibleactions,c(1,3))
-possibleactions = rbind(possibleactions,c(2,3))
-possibleactions = rbind(possibleactions,c(2,1))
-possibleactions = rbind(possibleactions,c(3,1))
-possibleactions = rbind(possibleactions,c(3,2))
-
-
 
 # Creation of the frontier with only the initial node
 node = list()
