@@ -15,9 +15,16 @@ isApplicable = function (state,action){
   return(FALSE)
 }
 
-effect = function (state,action){
-  newstate = state
-  return(newstate)
+effect = function (state, action) {
+  newState = state
+  for(i in length(state):1) {
+    if(state[i] == action[1]) {
+        break
+    }
+  }
+  newState[i] <- action[2]
+  
+  return(newState)
 }
 
 isFinalState = function (state, finalstate) {
@@ -32,3 +39,4 @@ isFinalState = function (state, finalstate) {
 toString = function (state){
   print("Hello world")
 }
+

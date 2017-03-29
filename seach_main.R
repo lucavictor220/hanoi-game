@@ -60,7 +60,14 @@ cat(possibleActions[1])
 
 # Check if is Applicable works for possible actions
 # WORKS == TRUE
-cat(isApplicable(initialState, possibleActions[6,]))
+cat(isApplicable(c(2, 2, 2), possibleActions[3,]))
+if (isApplicable(c(2, 2, 2), possibleActions[3,])) {
+  newState = effect(c(2, 2, 2), possibleActions[3,])
+}
+
+# Check if effect function work
+state = effect(newState, c(2,1))
+print(state)
 
 # Check isFinalState function
 # WORKS == TRUE
