@@ -2,8 +2,9 @@
 # *second instruction can provide error if path contains accents or special characters
 rm(list=ls())
 #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-#setwd("/Users/vitiok/University/IS/assignment_1")
+setwd("/Users/vitiok/University/IS/assignment_1")
 setwd(getwd())
+source("search_functions.R")
 
 # load library for permutation function
 library(gtools)
@@ -49,10 +50,21 @@ finalState   <- vector(mode = "integer", length = nrRods)
 finalState   <- replace(finalState, initialState == 0, finalRod)
 initialState <- replace(initialState, initialState == 0, initialRod)
 
-possibleActions = permutations(nrRods, 2, c(1:nrRods), repeats.allowed=FALSE)
+possibleActions <- permutations(nrRods, 2, c(1:nrRods), set = TRUE)
 
-# print possible actions
-cat(possibleActions)
+
+
+
+#first possible action
+cat(possibleActions[1])
+
+# Check if is Applicable works for possible actions
+# WORKS == TRUE
+cat(isApplicable(initialState, possibleActions[6,]))
+
+# Check isFinalState function
+# WORKS == TRUE
+isFinalState(c(2, 2, 2), c(2, 2, 2))
 
 # Creation of the frontier with only the initial node
 node = list()
@@ -68,7 +80,7 @@ countlimit = 100
   
 
   # While final state not found
-  while (!isFinalState(node$state,finalstate) & count<countlimit){
+  while (!isFinalState(node$state, finalState) & count<countlimit){
     # Break if frontier is empty
     if (length(frontier)==0){
       break

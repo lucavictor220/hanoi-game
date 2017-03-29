@@ -1,5 +1,18 @@
 isApplicable = function (state,action){
-  return(TRUE)
+  lastDiskTo <- 0
+  lastDiskFrom <- 0
+  for (i in state) {
+    if (state[i] == action[1]) {
+      lastDiskFrom = i
+    }
+    if (state[i] == action[2]) {
+      lastDiskTo = i
+    }
+  }
+  if(lastDiskTo < lastDiskFrom) {
+    return(TRUE)
+  }
+  return(FALSE)
 }
 
 effect = function (state,action){
@@ -7,8 +20,13 @@ effect = function (state,action){
   return(newstate)
 }
 
-isFinalState = function (state,finalstate){
-  return(FALSE)
+isFinalState = function (state, finalstate) {
+  for(i in state) {
+    if(state[i] != finalstate[i]) {
+      return(FALSE)
+    }
+  }
+  return(TRUE)
 }
 
 toString = function (state){
