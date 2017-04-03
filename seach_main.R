@@ -39,10 +39,15 @@ input_value <- function(text, min=0, max=20){
 
 
 # input nr of disks and roads
-nrDisks <- input_value("Enter nr of Disks: ", min_disks, max_disks)
-nrRods  <- input_value("Enter nr of Rods: ", min_rods, max_rods)
-initialRod <- input_value("Enter initial rod position: ", 1, nrRods)
-finalRod <- input_value("Enter final rod position: ", 1, nrRods)
+# nrDisks <- input_value("Enter nr of Disks: ", min_disks, max_disks)
+# nrRods  <- input_value("Enter nr of Rods: ", min_rods, max_rods)
+# initialRod <- input_value("Enter initial rod position: ", 1, nrRods)
+# finalRod <- input_value("Enter final rod position: ", 1, nrRods)
+
+nrDisks <- 3
+nrRods <- 3
+initialRod <- 1
+finalRod <- 3
 
 # create initial and final state
 initialState <- vector(mode = "integer", length = nrRods)
@@ -75,14 +80,14 @@ isFinalState(c(2, 2, 2), c(2, 2, 2))
 
 # Creation of the frontier with only the initial node
 node = list()
-node$state = initialstate
+node$state = initialState
 node$actions = c(0,0)
 node$deep = 0
 frontier = list(node)
 
 # Count is  used to avoid to fill memory (for bigger problems must be changed)
 count = 1
-countlimit = 100
+countlimit = 1000000
   
   
 
@@ -98,15 +103,15 @@ countlimit = 100
     frontier[[1]] = NULL
     
     # If final state found, break and return results
-    if (isFinalState(firstnode$state)){
+    if (isFinalState(firstnode$state, finalState)){
       print("Final State Found")
       break
     }
     
     
     # For each one of the possible actions
-    for (i in 1:nrow(possibleactions)){
-      action = as.numeric(possibleactions[1,])
+    for (i in 1:nrow(possibleActions)){
+      action = as.numeric(possibleActions[i,])
       state  = firstnode$state
       # If possible, it is applied and new node stored in frontier
       if (isApplicable(firstnode$state,action)){

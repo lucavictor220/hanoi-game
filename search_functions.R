@@ -1,4 +1,4 @@
-isApplicable = function (state,action){
+isApplicable = function (state, action) {
   lastDiskTo <- 0
   lastDiskFrom <- 0
   for (i in state) {
@@ -12,6 +12,7 @@ isApplicable = function (state,action){
   if(lastDiskTo < lastDiskFrom) {
     return(TRUE)
   }
+  
   return(FALSE)
 }
 
@@ -33,10 +34,11 @@ isFinalState = function (state, finalstate) {
       return(FALSE)
     }
   }
+  
   return(TRUE)
 }
 
-toString = function (state){
+toString = function (state) {
   print("Hello world")
 }
 
