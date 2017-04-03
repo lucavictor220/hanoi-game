@@ -1,12 +1,14 @@
 # This is used to configure the enviroment
 # *second instruction can provide error if path contains accents or special characters
 rm(list=ls())
-#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+# IMPORTANT: 
+# Set working directory properly on your own machine
 setwd("/Users/vitiok/University/IS/assignment_1")
-setwd(getwd())
+# Load search functions implementation
 source("search_functions.R")
 
-# load library for permutation function
+# Load library for permutation function
 library(gtools)
 
 kMinRods  <- 3
@@ -27,6 +29,7 @@ Between <- function(value, min=0, max=20) {
 InputValue <- function(text, min=0, max=20){ 
   n <- readline(prompt = text)
   n <- as.integer(n)
+  
   if (is.na(n)) {
     return(n <- InputValue(text, min, max))
   }
@@ -55,28 +58,8 @@ finalState   <- vector(mode = "integer", length = nrRods)
 finalState   <- replace(finalState, initialState == 0, finalRod)
 initialState <- replace(initialState, initialState == 0, initialRod)
 
+# Find all possible actions
 possibleActions <- permutations(nrRods, 2, c(1:nrRods), set = TRUE)
-
-
-
-
-#first possible action
-cat(possibleActions[1])
-
-# Check if is Applicable works for possible actions
-# WORKS == TRUE
-cat(IsApplicable(c(2, 2, 2), possibleActions[3, ]))
-if (IsApplicable(c(2, 2, 2), possibleActions[3, ])) {
-  newState = Effect(c(2, 2, 2), possibleActions[3, ])
-}
-
-# Check if Effect function work
-state = Effect(newState, c(2,1))
-print(state)
-
-# Check IsFinalState function
-# WORKS == TRUE
-IsFinalState(c(2, 3, 3), c(3, 3, 3))
 
 # Creation of the frontier with only the initial node
 node = list()
@@ -92,7 +75,7 @@ countLimit = 2000000
   
 
   # While final state not found
-  while (!IsFinalState(node$state, finalState) & count < countLimit){
+  while (!IsFinalState(node$state, finalState) & count < countLimit) {
     # Break if frontier is empty
     if (length(frontier) == 0) {
       break
@@ -103,7 +86,7 @@ countLimit = 2000000
     frontier[[1]] = NULL
     
     # If final state found, break and return results
-    if (IsFinalState(firstNode$state, finalState)){
+    if (IsFinalState(firstNode$state, finalState)) {
       print("Final State Found")
       break
     }
@@ -117,7 +100,7 @@ countLimit = 2000000
       if (IsApplicable(firstNode$state, action)) {
         newNode = list()
         newState = state
-        newNode$state = Effect(state,action)
+        newNode$state = Effect(state, action)
         newNode$actions = rbind(firstNode$actions, action)
         newNode$deep = firstNode$deep + 1
         frontier = append(frontier, list(newNode))
