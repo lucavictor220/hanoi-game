@@ -16,6 +16,10 @@ kMinDisks <- 3
 kMaxRods  <- 10
 kMaxDisks <- 10
 
+# Variables used to analyze algorithm
+expendedNodes = 0
+
+
 # check if value is in specified range
 Between <- function(value, min=0, max=20) {
   if(value < min || value > max) {
@@ -26,7 +30,7 @@ Between <- function(value, min=0, max=20) {
 }
 
 # take input from keyboard
-InputValue <- function(text, min=0, max=20){ 
+InputValue <- function(text, min=0, max=20) { 
   n <- readline(prompt = text)
   n <- as.integer(n)
   
@@ -47,16 +51,21 @@ InputValue <- function(text, min=0, max=20){
 # initialRod <- InputValue("Enter initial rod position: ", 1, nrRods)
 # finalRod <- InputValue("Enter final rod position: ", 1, nrRods)
 
-nrDisks <- 3
-nrRods <- 3
+nrDisks <- 4
+nrRods <- 4
 initialRod <- 1
-finalRod <- 3
+finalRod <- 4
 
 # create initial and final state
-initialState <- vector(mode = "integer", length = nrRods)
-finalState   <- vector(mode = "integer", length = nrRods)
+initialState <- vector(mode = "integer", length = nrDisks)
+finalState   <- vector(mode = "integer", length = nrDisks)
 finalState   <- replace(finalState, initialState == 0, finalRod)
 initialState <- replace(initialState, initialState == 0, initialRod)
+
+finalState
+initialState
+
+IsFinalState(c(3, 3, 3, 3), c(3, 3, 3, 3))
 
 # Find all possible actions
 possibleActions <- permutations(nrRods, 2, c(1:nrRods), set = TRUE)
@@ -64,13 +73,13 @@ possibleActions <- permutations(nrRods, 2, c(1:nrRods), set = TRUE)
 # Creation of the frontier with only the initial node
 node = list()
 node$state = initialState
-node$actions = c(0,0)
+node$actions = c(0, 0)
 node$deep = 0
 frontier = list(node)
 
 # Count is  used to avoid to fill memory (for bigger problems must be changed)
 count = 1
-countLimit = 2000000
+countLimit = 20000
   
   
 
@@ -103,10 +112,15 @@ countLimit = 2000000
         newNode$state = Effect(state, action)
         newNode$actions = rbind(firstNode$actions, action)
         newNode$deep = firstNode$deep + 1
-        frontier = append(frontier, list(newNode))
+        if (!is.element(newNode, frontier)) {
+          frontier = append(frontier, list(newNode))
+          print("new node")
+        }
       }
     }
     count = count + 1
+    print(count)
+    print(newNode$state)
   }
   
   # Show the obtained (or not) final solution
