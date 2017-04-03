@@ -1,12 +1,12 @@
-isApplicable = function (state, action) {
+IsApplicable <- function (state, action) {
   lastDiskTo <- 0
   lastDiskFrom <- 0
-  for (i in state) {
+  for (i in 1:length(state)) {
     if (state[i] == action[1]) {
-      lastDiskFrom = i
+      lastDiskFrom <- i
     }
     if (state[i] == action[2]) {
-      lastDiskTo = i
+      lastDiskTo <- i
     }
   }
   if(lastDiskTo < lastDiskFrom) {
@@ -16,10 +16,10 @@ isApplicable = function (state, action) {
   return(FALSE)
 }
 
-effect = function (state, action) {
-  newState = state
-  for(i in length(state):1) {
-    if(state[i] == action[1]) {
+Effect <- function (state, action) {
+  newState <- state
+  for (i in length(state):1) {
+    if (state[i] == action[1]) {
         break
     }
   }
@@ -28,8 +28,8 @@ effect = function (state, action) {
   return(newState)
 }
 
-isFinalState = function (state, finalstate) {
-  for(i in state) {
+IsFinalState <- function (state, finalstate) {
+  for(i in 1:length(state)) {
     if(state[i] != finalstate[i]) {
       return(FALSE)
     }
@@ -38,7 +38,7 @@ isFinalState = function (state, finalstate) {
   return(TRUE)
 }
 
-toString = function (state) {
+ToString <- function (state) {
   print("Hello world")
 }
 
