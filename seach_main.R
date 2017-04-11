@@ -51,21 +51,18 @@ InputValue <- function(text, min=0, max=20) {
 # initialRod <- InputValue("Enter initial rod position: ", 1, nrRods)
 # finalRod <- InputValue("Enter final rod position: ", 1, nrRods)
 
-nrDisks <- 4
-nrRods <- 4
+nrDisks <- 3
+nrRods <- 3
 initialRod <- 1
-finalRod <- 4
+finalRod <- 3
 
 # create initial and final state
 initialState <- vector(mode = "integer", length = nrDisks)
 finalState   <- vector(mode = "integer", length = nrDisks)
+
+# de revazut
 finalState   <- replace(finalState, initialState == 0, finalRod)
 initialState <- replace(initialState, initialState == 0, initialRod)
-
-finalState
-initialState
-
-IsFinalState(c(3, 3, 3, 3), c(3, 3, 3, 3))
 
 # Find all possible actions
 possibleActions <- permutations(nrRods, 2, c(1:nrRods), set = TRUE)
@@ -75,61 +72,75 @@ node = list()
 node$state = initialState
 node$actions = c(0, 0)
 node$deep = 0
+
+# initialize frontier with initial node 
 frontier = list(node)
 
-# Count is  used to avoid to fill memory (for bigger problems must be changed)
-count = 1
-countLimit = 20000
-  
-  
+# initialize visited nodes in the tree
+# purpose? => avoid expending same state twice
+visitedStates = list(initialState)
 
-  # While final state not found
-  while (!IsFinalState(node$state, finalState) & count < countLimit) {
-    # Break if frontier is empty
-    if (length(frontier) == 0) {
-      break
+# Check for state in list of states
+checkForState <- function(state, listOfStates) {
+  for (i in listOfStates) {
+    if (identical(state, i)) {
+      return(TRUE)
     }
-    
-    # Extract first node of the frontier
-    firstNode = frontier[[1]]
-    frontier[[1]] = NULL
-    
-    # If final state found, break and return results
-    if (IsFinalState(firstNode$state, finalState)) {
-      print("Final State Found")
-      break
-    }
-    
-    
-    # For each one of the possible actions
-    for (i in 1:nrow(possibleActions)) {
-      action = as.numeric(possibleActions[i, ])
-      state  = firstNode$state
-      # If possible, it is applied and new node stored in frontier
-      if (IsApplicable(firstNode$state, action)) {
-        newNode = list()
-        newState = state
-        newNode$state = Effect(state, action)
-        newNode$actions = rbind(firstNode$actions, action)
-        newNode$deep = firstNode$deep + 1
-        if (!is.element(newNode, frontier)) {
-          frontier = append(frontier, list(newNode))
-          print("new node")
-        }
-      }
-    }
-    count = count + 1
-    print(count)
-    print(newNode$state)
+  }
+  return(FALSE)
+}
+# count - used to avoid to fill memory (for bigger problems must be changed)
+count = 1
+countLimit = 10000
+
+#firstNodeFound = node
+
+# While final state not found
+while (!IsFinalState(node$state, finalState) & count < countLimit) {
+  # Break if frontier is empty
+  if (length(frontier) == 0) {
+    break
   }
   
-  # Show the obtained (or not) final solution
-  if (count == countLimit | length(frontier) == 0) {
-    print("Maximum Number of iterations reached. No solution found")
-  } else {
-    print("Solution found!!")
-    print(firstNode$actions)
+  # Extract first node of the frontier
+  firstNode <- frontier[[1]]
+  frontier[[1]] <- NULL
+  
+  # If final state found, break and return results
+  if (IsFinalState(firstNode$state, finalState)) {
+    print("Final State Found")
+    break
   }
+    
+  # For each one of the possible actions
+  for (i in 1:nrow(possibleActions)) {
+    action = as.numeric(possibleActions[i, ])
+    state  = firstNode$state
+    # If possible, it is applied and new node stored in frontier
+    if (IsApplicable(firstNode$state, action)) {
+      newNode = list()
+      newState = state
+      # in order to avoid visited states uncomment the if statement
+      # if (checkForState(Effect(state, action), visitedStates)) {
+      #   break
+      # }
+      newNode$state = Effect(state, action)
+      newNode$actions = rbind(firstNode$actions, action)
+      newNode$deep = firstNode$deep + 1
+      frontier = append(frontier, list(newNode))
+    }
+  }
+  count = count + 1
+  print(count)
+}
+
+# Show the obtained (or not) final solution
+if (count == countLimit | length(frontier) == 0) {
+  print("Maximum Number of iterations reached. No solution found")
+} else {
+  print("Solution found!!")
+  print(firstNode$actions)
+}
   
 
   
