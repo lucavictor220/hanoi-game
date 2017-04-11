@@ -51,10 +51,10 @@ InputValue <- function(text, min=0, max=20) {
 # initialRod <- InputValue("Enter initial rod position: ", 1, nrRods)
 # finalRod <- InputValue("Enter final rod position: ", 1, nrRods)
 
-nrDisks <- 3
-nrRods <- 3
+nrDisks <- 4
+nrRods <- 4
 initialRod <- 1
-finalRod <- 3
+finalRod <- 4
 
 # create initial and final state
 initialState <- vector(mode = "integer", length = nrDisks)
@@ -81,7 +81,7 @@ frontier = list(node)
 visitedStates = list(initialState)
 
 # Check for state in list of states
-checkForState <- function(state, listOfStates) {
+checkForVisitedState <- function(state, listOfStates) {
   for (i in listOfStates) {
     if (identical(state, i)) {
       return(TRUE)
@@ -94,6 +94,11 @@ count = 1
 countLimit = 10000
 
 #firstNodeFound = node
+
+# Variables to measure efficiency of algorithm
+start.time <- Sys.time()
+nrOfNodesExplored = 0
+maxSizeOfFrontier = 0
 
 # While final state not found
 while (!IsFinalState(node$state, finalState) & count < countLimit) {
@@ -120,14 +125,20 @@ while (!IsFinalState(node$state, finalState) & count < countLimit) {
     if (IsApplicable(firstNode$state, action)) {
       newNode = list()
       newState = state
-      # in order to avoid visited states uncomment the if statement
-      # if (checkForState(Effect(state, action), visitedStates)) {
+      # in order to avoid visited states we can check if newState have been visited
+      # if (checkForVisitedState(Effect(state, action), visitedStates)) {
       #   break
       # }
       newNode$state = Effect(state, action)
       newNode$actions = rbind(firstNode$actions, action)
       newNode$deep = firstNode$deep + 1
       frontier = append(frontier, list(newNode))
+      
+      if (maxSizeOfFrontier < length(frontier)) {
+        maxSizeOfFrontier <- length(frontier)
+      }
+      
+      nrOfNodesExplored = nrOfNodesExplored + 1
     }
   }
   count = count + 1
@@ -141,6 +152,12 @@ if (count == countLimit | length(frontier) == 0) {
   print("Solution found!!")
   print(firstNode$actions)
 }
+
+end.time <- Sys.time()
+time.taken = end.time - start.time
+time.taken
+cat("Nr of nodes explored: ", nrOfNodesExplored)
+cat("Frontier max length is: ", maxSizeOfFrontier)
   
 
   
