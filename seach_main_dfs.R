@@ -6,7 +6,7 @@ rm(list=ls())
 # Set working directory properly on your own machine
 setwd("/Users/vitiok/University/IS/assignment_1")
 # Load search functions implementation
-source("search_functions.R")
+source("search_functions_dfs.R")
 
 # Load library for permutation function
 library(gtools)
@@ -15,6 +15,8 @@ kMinRods  <- 3
 kMinDisks <- 3
 kMaxRods  <- 10
 kMaxDisks <- 10
+
+deletedNodes = list()
 
 # Variables used to analyze algorithm
 expendedNodes = 0
@@ -51,10 +53,10 @@ InputValue <- function(text, min=0, max=20) {
 # initialRod <- InputValue("Enter initial rod position: ", 1, nrRods)
 # finalRod <- InputValue("Enter final rod position: ", 1, nrRods)
 
-nrDisks <- 3
-nrRods <- 3
+nrDisks <- 4
+nrRods <- 6
 initialRod <- 1
-finalRod <- 3
+finalRod <- 6
 
 # create initial and final state
 initialState <- vector(mode = "integer", length = nrDisks)
@@ -75,10 +77,6 @@ node$deep = 0
 
 # initialize frontier with initial node 
 frontier = list(node)
-
-# initialize visited nodes in the tree
-# purpose? => avoid expending same state twice
-visitedStates = list(initialState)
 
 # Check for state in list of states
 checkForVisitedState <- function(state, listOfStates) {
@@ -107,28 +105,30 @@ while (!IsFinalState(node$state, finalState) & count < countLimit) {
     break
   }
   
-  # Extract first node of the frontier
-  firstNode <- frontier[[1]]
-  frontier[[1]] <- NULL
+  # Get first node from frontier
+  indexOfFirstNode = findNodeFrontier(frontier)
+  firstNode = frontier[[indexOfFirstNode]]
   
   # If final state found, break and return results
   if (IsFinalState(firstNode$state, finalState)) {
     print("Final State Found")
     break
   }
+  
+  deletedNodes = append(deletedNodes, list(frontier[[indexOfFirstNode]]))
+  
+  frontier[[indexOfFirstNode]] = NULL
     
   # For each one of the possible actions
   for (i in 1:nrow(possibleActions)) {
     action = as.numeric(possibleActions[i, ])
     state  = firstNode$state
     # If possible, it is applied and new node stored in frontier
-    if (IsApplicable(firstNode$state, action)) {
+    if (IsApplicable(firstNode$state, action) &
+        !NodeIsVisited(firstNode$state, action, frontier) &
+        !NodeIsVisited(firstNode$state, action, deletedNodes)) {
       newNode = list()
       newState = state
-      # in order to avoid visited states we can check if newState have been visited
-      # if (checkForVisitedState(Effect(state, action), visitedStates)) {
-      #   break
-      # }
       newNode$state = Effect(state, action)
       newNode$actions = rbind(firstNode$actions, action)
       newNode$deep = firstNode$deep + 1
@@ -150,7 +150,6 @@ if (count == countLimit | length(frontier) == 0) {
   print("Maximum Number of iterations reached. No solution found")
 } else {
   print("Solution found!!")
-  print(firstNode$actions)
 }
 
 end.time <- Sys.time()
